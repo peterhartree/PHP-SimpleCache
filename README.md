@@ -21,7 +21,7 @@ Run `composer install` then use as normal.
 
 ## Usage
 
-A very basic usage example:
+A basic usage example:
 
 ```php
 require 'vendor/autoload.php';
@@ -44,24 +44,6 @@ $cache = new Gilbitron\Util\SimpleCache($s3, $s3_bucket_id);
 
 $latest_tweet = $cache->get_data('tweet', 'http://search.twitter.com/search.atom?q=from:gilbitron&rpp=1');
 echo $latest_tweet;
-```
-
-A more advanced example:
-
-```php
-$cache = new Gilbitron\Util\SimpleCache();
-$cache->cache_path = 'cache/';
-$cache->cache_time = 3600;
-
-if($data = $cache->get_cache('label')){
-	$data = json_decode($data);
-} else {
-	$data = $cache->do_curl('http://some.api.com/file.json');
-	$cache->set_cache('label', $data);
-	$data = json_decode($data);
-}
-
-print_r($data);
 ```
 
 ## Credits
