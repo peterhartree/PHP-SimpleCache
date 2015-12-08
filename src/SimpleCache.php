@@ -1,5 +1,4 @@
 <?php
-
 namespace Gilbitron\Util;
 
 /*
@@ -13,12 +12,20 @@ namespace Gilbitron\Util;
  */
 class SimpleCache {
 
+	public $s3;
+	public $s3_bucket_id;
+
 	// Path to cache folder (with trailing /)
 	public $cache_path = 'cache/';
 	// Length of time to cache a file (in seconds)
 	public $cache_time = 3600;
 	// Cache file extension
 	public $cache_extension = '.cache';
+
+	function __construct($s3, $s3_bucket_id) {
+		$this->s3 = $s3;
+		$this->s3_bucket_id = $s3_bucket_id;
+	}
 
 	// This is just a functionality wrapper function
 	public function get_data($label, $url)
@@ -34,14 +41,41 @@ class SimpleCache {
 
 	public function set_cache($label, $data)
 	{
-		file_put_contents($this->cache_path . $this->safe_filename($label) . $this->cache_extension, $data);
+		$filename = $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
+
+		try {
+			// Upload a file.
+			$result = $this->s3->putObject(array(
+			    'Bucket'       => $this->s3_bucket_id,
+			    'Key' 				=> $filename,
+			    'Body'   				=> $data,
+			    'ContentType'  => 'text/plain',
+			    'ACL'          => 'public-read',
+			    'StorageClass' => 'REDUCED_REDUNDANCY',
+			));
+			echo $result['ObjectURL'];
+
+		} catch (Exception $e) {
+		    echo $e->getMessage() . "\n";
+		}
 	}
 
 	public function get_cache($label)
 	{
 		if($this->is_cached($label)){
+
 			$filename = $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
-			return file_get_contents($filename);
+
+			$result = $this->s3->getObject(array(
+			    'Bucket' => $this->s3_bucket_id,
+			    'Key'    => $filename
+			));
+
+			$last_modified_timestamp = strtotime($result['LastModified']);
+
+			if($last_modified_timestamp + $this->cache_time >= time()):
+ 				return $result['Body'];
+			endif;
 		}
 
 		return false;
@@ -51,7 +85,11 @@ class SimpleCache {
 	{
 		$filename = $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
 
-		if(file_exists($filename) && (filemtime($filename) + $this->cache_time >= time())) return true;
+		$file_exists = $this->s3->doesObjectExist($this->s3_bucket_id, $filename);
+
+		if($file_exists):
+			return true;
+		endif;
 
 		return false;
 	}
