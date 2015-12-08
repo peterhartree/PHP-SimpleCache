@@ -2,7 +2,7 @@
 
 The PHP SimpleCache Class is an easy way to cache 3rd party API calls.
 
-Patched by @peterhartree to store the cache on Amazon S3.
+Patched by @peterhartree to store the cache files on Amazon S3.
 
 ## Install
 
@@ -28,7 +28,7 @@ require 'vendor/autoload.php';
 
 $s3_bucket_id = 'YOUR_BUCKET_ID';
 
-$credentials = array(
+$s3_credentials = array(
   'credentials' => array(
     'key'    => 'YOUR_KEY',
     'secret' => 'YOUR_SECRET_KEY',
@@ -38,9 +38,9 @@ $credentials = array(
 use Aws\S3\S3Client;
 
 // Instantiate the client.
-$s3 = S3Client::factory($credentials);
+$s3_client = S3Client::factory($s3_credentials);
 
-$cache = new Gilbitron\Util\SimpleCache($s3, $s3_bucket_id);
+$cache = new Gilbitron\Util\SimpleCache($s3_client, $s3_bucket_id);
 
 $latest_tweet = $cache->get_data('tweet', 'http://search.twitter.com/search.atom?q=from:gilbitron&rpp=1');
 echo $latest_tweet;
