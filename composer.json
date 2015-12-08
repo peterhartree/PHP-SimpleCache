@@ -1,18 +1,23 @@
 {
-  "name": "gilbitron/php-simplecache",
+  "name": "peterhartree/php-simplecache",
   "type": "library",
   "description": "A simple script for caching 3rd party API calls in PHP.",
   "keywords": [
     "simplecache",
     "cache"
   ],
-  "homepage": "https://github.com/gilbitron/PHP-SimpleCache",
+  "homepage": "https://github.com/peterhartree/PHP-SimpleCache",
   "license": "MIT",
   "authors": [
     {
       "name": "Gilbert Pellegrom",
       "email": "gilbert@pellegrom.me",
       "homepage": "http://gilbert.pellegrom.me"
+    },
+    {
+      "name": "Peter Hartree",
+      "email": "web@peterhartree.co.uk",
+      "homepage": "https://github.com/peterhartree/"
     }
   ],
   "require": {
