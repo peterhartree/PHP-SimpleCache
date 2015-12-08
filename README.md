@@ -9,7 +9,7 @@ Install via [composer](https://getcomposer.org):
 ```javascript
 {
     "require": {
-        "gilbitron/php-simplecache": "~1.4"
+        "peterhartree/php-simplecache": "~1.4"
     }
 }
 ```
