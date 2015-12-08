@@ -27,6 +27,7 @@ A basic usage example:
 require 'vendor/autoload.php';
 
 $s3_bucket_id = 'YOUR_BUCKET_ID';
+$s3_access_control_list = 'CANNED_ACL'; // http://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl
 
 $s3_credentials = array(
   'credentials' => array(
@@ -40,7 +41,7 @@ use Aws\S3\S3Client;
 // Instantiate the client.
 $s3_client = S3Client::factory($s3_credentials);
 
-$cache = new Gilbitron\Util\SimpleCache($s3_client, $s3_bucket_id);
+$cache = new Gilbitron\Util\SimpleCache($s3_client, $s3_bucket_id, $s3_access_control_list);
 
 $latest_tweet = $cache->get_data('tweet', 'http://search.twitter.com/search.atom?q=from:gilbitron&rpp=1');
 echo $latest_tweet;

@@ -14,6 +14,7 @@ class SimpleCache {
 
 	public $s3;
 	public $s3_bucket_id;
+	public $s3_access_control_list;
 
 	// Path to cache folder (with trailing /)
 	public $cache_path = 'cache/';
@@ -22,9 +23,10 @@ class SimpleCache {
 	// Cache file extension
 	public $cache_extension = '.cache';
 
-	function __construct($s3, $s3_bucket_id) {
+	function __construct($s3, $s3_bucket_id, $s3_access_control_list = 'private') {
 		$this->s3 = $s3;
 		$this->s3_bucket_id = $s3_bucket_id;
+		$this->s3_access_control_list = $s3_access_control_list;
 	}
 
 	// This is just a functionality wrapper function
@@ -50,7 +52,7 @@ class SimpleCache {
 			    'Key' 				=> $filename,
 			    'Body'   				=> $data,
 			    'ContentType'  => 'text/plain',
-			    'ACL'          => 'public-read',
+			    'ACL'          => $this->s3_access_control_list,
 			    'StorageClass' => 'REDUCED_REDUNDANCY',
 			));
 			echo $result['ObjectURL'];
