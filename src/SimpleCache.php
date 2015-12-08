@@ -55,8 +55,6 @@ class SimpleCache {
 			    'ACL'          => $this->s3_access_control_list,
 			    'StorageClass' => 'REDUCED_REDUNDANCY',
 			));
-			echo $result['ObjectURL'];
-
 		} catch (Exception $e) {
 		    echo $e->getMessage() . "\n";
 		}
